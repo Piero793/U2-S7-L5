@@ -3,6 +3,7 @@ const DETAIL_TOKEN =
   "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzkzNWE2ZmI3NDcwMTAwMTU4YjJhZjUiLCJpYXQiOjE3Mzc3MTAxOTEsImV4cCI6MTczODkxOTc5MX0.TVe53dhyU6yM9R0PhzRkPUomIM-wHCauqZQaAUDfHfk";
 
 document.addEventListener("DOMContentLoaded", () => {
+  console.log("DOM Content Loaded");
   const productId = getProductIdFromURL();
   if (productId) {
     fetchProduct(productId);
@@ -10,6 +11,7 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 function fetchProduct(productId) {
+  console.log("Fetching Product ID:", productId);
   fetch(`${DETAIL_URL}${productId}`, {
     method: "GET",
     headers: {
@@ -18,12 +20,14 @@ function fetchProduct(productId) {
     },
   })
     .then((response) => {
+      console.log("HTTP Response:", response);
       if (response.ok) {
         return response.json();
       }
       throw new Error(`HTTP error!: ${response.status}`);
     })
     .then((product) => {
+      console.log("Product Data:", product);
       displayProductDetails(product);
     })
     .catch((error) => {
