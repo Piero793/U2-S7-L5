@@ -85,26 +85,32 @@ const token =
   "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzkzNWE2ZmI3NDcwMTAwMTU4YjJhZjUiLCJpYXQiOjE3Mzc3MTAxOTEsImV4cCI6MTczODkxOTc5MX0.TVe53dhyU6yM9R0PhzRkPUomIM-wHCauqZQaAUDfHfk";
 
 document.addEventListener("DOMContentLoaded", function () {
+  console.log("DOM Content Loaded");
+
   const queryString = window.location.search;
   const urlParams = new URLSearchParams(queryString);
   const productId = urlParams.get("id");
 
   if (productId) {
+    console.log("Product ID:", productId);
     fetchProduct(productId);
   }
 
   const formElement = document.getElementById("product-form");
   if (formElement) {
+    console.log("Form Element Found");
     formElement.addEventListener("submit", handleFormSubmit);
   }
 
   const deleteButton = document.getElementById("delete-button");
   if (deleteButton) {
+    console.log("Delete Button Found");
     deleteButton.addEventListener("click", handleDelete);
   }
 });
 
 function fetchProduct(productId) {
+  console.log("Fetching Product");
   fetch(`${BACKOFFICE_URL}${productId}`, {
     method: "GET",
     headers: {
@@ -113,12 +119,14 @@ function fetchProduct(productId) {
     },
   })
     .then((response) => {
+      console.log("HTTP Response:", response);
       if (response.ok) {
         return response.json();
       }
       throw new Error(`HTTP error!: ${response.status}`);
     })
     .then((product) => {
+      console.log("Product Data:", product);
       populateForm(product);
     })
     .catch((error) => {
@@ -137,6 +145,7 @@ function populateForm(product) {
 
 function handleFormSubmit(event) {
   event.preventDefault();
+  console.log("Form Submitted");
 
   const productId = document.getElementById("productId").value;
   const method = productId ? "PUT" : "POST";
@@ -159,12 +168,14 @@ function handleFormSubmit(event) {
     body: JSON.stringify(product),
   })
     .then((response) => {
+      console.log("HTTP Response:", response);
       if (response.ok) {
         return response.json();
       }
       throw new Error(`HTTP error!: ${response.status}`);
     })
     .then((result) => {
+      console.log("Form Submit Result:", result);
       alert(`Prodotto ${method === "POST" ? "creato" : "modificato"} con successo!`);
       window.location.href = "./index.html";
     })
@@ -174,6 +185,7 @@ function handleFormSubmit(event) {
 }
 
 function handleDelete() {
+  console.log("Delete Button Clicked");
   const productId = document.getElementById("productId").value;
 
   if (!productId) {
@@ -192,12 +204,14 @@ function handleDelete() {
     },
   })
     .then((response) => {
+      console.log("HTTP Response:", response);
       if (!response.ok) {
         throw new Error(`HTTP error!: ${response.status}`);
       }
       return response.json();
     })
     .then((result) => {
+      console.log("Delete Result:", result);
       alert("Prodotto cancellato con successo!");
       window.location.href = "./index.html";
     })
