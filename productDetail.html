@@ -8,9 +8,9 @@
     <link rel="stylesheet" href="./assets/css/style.css" />
   </head>
   <body>
-    <nav class="navbar bg-body-tertiary">
+    <nav class="navbar bg-info">
       <div class="container-fluid">
-        <nav class="navbar bg-body-tertiary">
+        <nav class="navbar bg-info">
           <div class="container">
             <a class="navbar-brand" href="#">
               <img
@@ -20,13 +20,19 @@
                 height="60"
               />
             </a>
-            <nav class="navbar bg-body-tertiary">
+            <nav class="navbar bg-info">
               <div class="container-fluid">
                 <span class="navbar-brand mb-0 h1">CRUDAZON</span>
+                <a class="navbar-brand" href="./index.html">Home</a>
+                <a class="navbar-brand" href="./backOffice.html">BackOffice</a>
               </div>
             </nav>
           </div>
         </nav>
+        <form class="d-flex" role="search">
+          <input class="form-control me-2" type="search" placeholder="Cerca Prodotti" aria-label="Search" />
+          <button class="btn bg-warning" type="submit">Cerca</button>
+        </form>
       </div>
     </nav>
     <div class="container text-center">
