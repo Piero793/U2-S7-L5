@@ -79,3 +79,135 @@ const productData = [
     price: 18,
   },
 ];
+
+const BACKOFFICE_URL = "https://striveschool-api.herokuapp.com/api/product/";
+const token =
+  "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzkzNWE2ZmI3NDcwMTAwMTU4YjJhZjUiLCJpYXQiOjE3Mzc3MTAxOTEsImV4cCI6MTczODkxOTc5MX0.TVe53dhyU6yM9R0PhzRkPUomIM-wHCauqZQaAUDfHfk";
+
+document.addEventListener("DOMContentLoaded", function () {
+  const queryString = window.location.search;
+  const urlParams = new URLSearchParams(queryString);
+  const productId = urlParams.get("id");
+
+  if (productId) {
+    fetchProduct(productId);
+  }
+
+  const formElement = document.getElementById("product-form");
+  if (formElement) {
+    formElement.addEventListener("submit", handleFormSubmit);
+  }
+
+  const deleteButton = document.getElementById("delete-button");
+  if (deleteButton) {
+    deleteButton.addEventListener("click", handleDelete);
+  }
+});
+
+function fetchProduct(productId) {
+  fetch(`${BACKOFFICE_URL}${productId}`, {
+    method: "GET",
+    headers: {
+      Authorization: token,
+      "Content-Type": "application/json",
+    },
+  })
+    .then((response) => {
+      if (response.ok) {
+        return response.json();
+      }
+      throw new Error(`HTTP error!: ${response.status}`);
+    })
+    .then((product) => {
+      populateForm(product);
+    })
+    .catch((error) => {
+      console.error("Error fetching product:", error);
+    });
+}
+
+function populateForm(product) {
+  document.getElementById("productName").value = product.name;
+  document.getElementById("productDescription").value = product.description;
+  document.getElementById("productBrand").value = product.brand;
+  document.getElementById("productImageUrl").value = product.imageUrl;
+  document.getElementById("productPrice").value = product.price;
+  document.getElementById("productId").value = product._id;
+}
+
+function handleFormSubmit(event) {
+  event.preventDefault();
+
+  const productId = document.getElementById("productId").value;
+  const method = productId ? "PUT" : "POST";
+  const urlEndpoint = productId ? `${BACKOFFICE_URL}${productId}` : BACKOFFICE_URL;
+
+  const product = {
+    name: document.getElementById("productName").value,
+    description: document.getElementById("productDescription").value,
+    brand: document.getElementById("productBrand").value,
+    imageUrl: document.getElementById("productImageUrl").value,
+    price: document.getElementById("productPrice").value,
+  };
+
+  fetch(urlEndpoint, {
+    method: method,
+    headers: {
+      Authorization: token,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(product),
+  })
+    .then((response) => {
+      if (response.ok) {
+        return response.json();
+      }
+      throw new Error(`HTTP error!: ${response.status}`);
+    })
+    .then((result) => {
+      alert(`Prodotto ${method === "POST" ? "creato" : "modificato"} con successo!`);
+      window.location.href = "./index.html";
+    })
+    .catch((error) => {
+      console.error("Error submitting product:", error);
+    });
+}
+
+function handleDelete() {
+  const productId = document.getElementById("productId").value;
+
+  if (!productId) {
+    alert("Nessun prodotto selezionato per l'eliminazione.");
+    return;
+  }
+
+  const confirmation = confirm("Sei sicuro di voler cancellare questo prodotto?");
+  if (!confirmation) return;
+
+  fetch(`${BACKOFFICE_URL}${productId}`, {
+    method: "DELETE",
+    headers: {
+      Authorization: token,
+      "Content-Type": "application/json",
+    },
+  })
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error(`HTTP error!: ${response.status}`);
+      }
+      return response.json();
+    })
+    .then((result) => {
+      alert("Prodotto cancellato con successo!");
+      window.location.href = "./index.html";
+    })
+    .catch((error) => {
+      console.error("Error deleting product:", error);
+    });
+}
+
+function getProductIdFromURL() {
+  const queryString = window.location.search;
+  const urlParams = new URLSearchParams(queryString);
+  return urlParams.get("id");
+}
