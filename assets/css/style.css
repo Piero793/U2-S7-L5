@@ -9,3 +9,11 @@ body {
   background-repeat: no-repeat;
   background-size: cover;
 }
+
+.spinner-border {
+  display: none;
+}
+
+.loading .spinner-border {
+  display: inline-block;
+}

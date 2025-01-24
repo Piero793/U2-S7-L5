@@ -1,6 +1,9 @@
 const HOME_URL = "https://striveschool-api.herokuapp.com/api/product/";
 
 function fetchProducts() {
+  // Appare  lo spinner
+  document.body.classList.add("loading");
+
   fetch(HOME_URL, {
     method: "GET",
     headers: {
@@ -22,6 +25,10 @@ function fetchProducts() {
     })
     .catch((error) => {
       console.error("Error fetching products:", error);
+    })
+    .finally(() => {
+      // Nascondo lo spinner
+      document.body.classList.remove("loading");
     });
 }
 
@@ -54,4 +61,5 @@ function editProduct(productId) {
   window.location.href = `./backOffice.html?id=${productId}`;
 }
 
-fetchProducts();
+// Inizia a caricare i prodotti quando il documento è pronto
+document.addEventListener("DOMContentLoaded", fetchProducts);
